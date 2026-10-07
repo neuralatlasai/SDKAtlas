@@ -212,12 +212,15 @@ def test_response_fields_match_runtime_annotations_and_required_keys() -> None:
         assert set(fields) == set(expected_hints)
         for name, annotation in expected_hints.items():
             assert fields[name].annotation == _annotation_text(annotation)
-            declaring_class = next(
-                owner
-                for owner in model.__mro__
-                if name in vars(owner).get("__annotations__", {})
-            )
             if not typing.is_typeddict(model):
+                # Python 3.14 defers class annotations (PEP 649); reading vars
+                # can miss the unevaluated annotation namespace. The supported
+                # introspection API retrieves only each owner's declarations.
+                declaring_class = next(
+                    owner
+                    for owner in model.__mro__
+                    if name in inspect.get_annotations(owner)
+                )
                 assert fields[name].inherited == (declaring_class is not model)
                 assert fields[name].class_id == (
                     f"oracle_fixture.{declaring_class.__name__}"
