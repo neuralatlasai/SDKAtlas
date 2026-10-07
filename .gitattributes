@@ -1,0 +1,2 @@
+# Keep formatter and reproducible-build inputs identical across platforms.
+* text=auto eol=lf

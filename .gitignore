@@ -218,3 +218,15 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# SDK Atlas local artifacts
+.env.*
+!.env.example
+.cache/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+inventory/
+*_inventory/
+*-benchmark.json

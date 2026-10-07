@@ -1,0 +1,89 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sdk-atlas"
+version = "0.1.0"
+description = "Static, source-derived inventory of Python modules and SDK surfaces"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Documentation",
+]
+
+[project.optional-dependencies]
+dev = [
+    "build>=1.2,<2",
+    "hatchling>=1.27,<2",
+    "mypy>=1.15,<2",
+    "pip>=25,<27",
+    "pip-audit>=2.9,<3",
+    "pytest>=8,<10",
+    "ruff>=0.12,<1",
+]
+
+[project.scripts]
+sdk-atlas = "sdk_atlas.cli:main"
+
+[tool.hatch.build]
+reproducible = true
+exclude = ["**/__pycache__/**", "**/*.py[cod]", "**/*.egg-info/**"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sdk_atlas"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/tests",
+    "/docs",
+    "/examples",
+    "/scripts",
+    "/.github",
+    "/.gitignore",
+    "/.gitattributes",
+    "/*.md",
+    "/pyproject.toml",
+]
+
+[tool.ruff]
+# The repository adopts the 88-column Ruff formatter profile as its documented
+# extension of PEP 8's default line width; standards.md section 5 permits this.
+line-length = 88
+target-version = "py311"
+src = ["src"]
+extend-exclude = ["build", "dist", ".venv"]
+force-exclude = true
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src", "scripts", "examples"]
+warn_unreachable = true
+show_error_codes = true
+pretty = true
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+norecursedirs = ["build", "dist", ".venv", ".git"]
+addopts = ["--import-mode=importlib", "--strict-config", "--strict-markers", "-ra"]
+filterwarnings = ["error"]

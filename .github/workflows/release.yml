@@ -1,0 +1,47 @@
+name: Validate release artifacts
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Reviewed package version to validate
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  artifacts:
+    name: Validate and retain distributions
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      EXPECTED_VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.14'
+      - name: Validate version
+        run: |
+          python - <<'PY'
+          import os
+          import pathlib
+          import tomllib
+          project = tomllib.loads(pathlib.Path("pyproject.toml").read_text("utf-8"))
+          version = project["project"]["version"]
+          if version != os.environ["EXPECTED_VERSION"]:
+              raise SystemExit("Requested version differs from package metadata")
+          PY
+      - run: python -m venv .venv
+      - run: .venv/bin/python -m pip install -e ".[dev]"
+      - run: .venv/bin/python scripts/check.py --artifacts dist
+      # upload-artifact v4.6.2; no package-index publication is configured.
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sdk-atlas-${{ inputs.version }}
+          path: dist/*
+          if-no-files-found: error
