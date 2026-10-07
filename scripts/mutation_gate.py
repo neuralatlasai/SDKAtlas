@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import importlib
 import importlib.metadata
 import json
 import os
@@ -78,17 +79,18 @@ def _predicate_line(source: str, function: str, predicate: str) -> int:
 
 def _mutant(source: str, function: str, predicate: str) -> str:
     """Let the external framework generate the selected, syntax-valid mutant."""
-    from cosmic_ray.ast import ast_nodes, get_ast  # type: ignore[import-untyped]
-    from cosmic_ray.mutating import mutate_code  # type: ignore[import-untyped]
-    from cosmic_ray.operators.boolean_replacer import (  # type: ignore[import-untyped]
-        AddNot,
-    )
+    # The optional, untyped backend is loaded only at this integration boundary.
+    # Base .[dev] quality environments must type-check without the mutation extra;
+    # missing backend imports remain real failures when a campaign is requested.
+    syntax = importlib.import_module("cosmic_ray.ast")
+    mutating = importlib.import_module("cosmic_ray.mutating")
+    operators = importlib.import_module("cosmic_ray.operators.boolean_replacer")
 
     target_line = _predicate_line(source, function, predicate)
-    operator = AddNot()
+    operator = operators.AddNot()
     occurrence = 0
     found: list[int] = []
-    for node in ast_nodes(get_ast(source)):
+    for node in syntax.ast_nodes(syntax.get_ast(source)):
         for start, _end in operator.mutation_positions(node):
             if start[0] == target_line:
                 found.append(occurrence)
@@ -97,8 +99,8 @@ def _mutant(source: str, function: str, predicate: str) -> str:
         raise ValueError(
             "Cosmic Ray could not uniquely target the configured predicate"
         )
-    mutated: str | None = mutate_code(source, operator, found[0])
-    if mutated is None or mutated == source:
+    mutated = mutating.mutate_code(source, operator, found[0])
+    if not isinstance(mutated, str) or mutated == source:
         raise ValueError("Cosmic Ray produced no mutation")
     ast.parse(mutated)
     return mutated
