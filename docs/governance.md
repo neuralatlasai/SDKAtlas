@@ -14,8 +14,10 @@ Before external distribution, the repository owner must make these decisions:
    `.github/` at that repository's root; GitHub does not discover workflow files
    nested under an arbitrary parent project directory. If this remains part of a
    monorepo, move the workflows to the monorepo root and adjust working paths.
-3. Require pull requests, the Quality and Dependency security checks, and at
-   least one qualified reviewer on default/release branches. Dismiss stale
+3. Require pull requests, all Quality matrix checks, Dependency security,
+   Critical predicate mutation gate, Latency/allocation/scaling budgets, pinned
+   SDK regression checks, and at least one qualified reviewer on default/release
+   branches. Dismiss stale
    approvals and require review of the latest revision where supported.
 4. Disable force pushes and branch deletion for protected default/release
    branches. Restrict release-tag creation to authorized maintainers.

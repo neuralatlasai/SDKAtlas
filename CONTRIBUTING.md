@@ -1,6 +1,6 @@
 # Contributing
 
-Use Python 3.11 or later and work from the `sdk_atlas` project directory. Read
+Use Python 3.11 or later and work from the `SDKAtlas` repository directory. Read
 [standards.md](standards.md) before changing source or public behavior.
 
 ```bash
@@ -13,7 +13,9 @@ python scripts/check.py
 
 `scripts/check.py` verifies formatting, lint, strict types, deterministic tests,
 source and wheel builds, isolated wheel installation, the console entry point,
-and installed dependency advisories. The advisory check requires network access.
+and installed dependency advisories. It measures branch coverage and enforces
+independent total and per-module statement/branch floors. The advisory check
+requires network access.
 `--skip-security` is available for offline development; it does not satisfy the
 complete quality gate. CI runs dependency auditing as a separate required job.
 Run `python scripts/audit_dependencies.py` to repeat that job alone. It audits
@@ -33,6 +35,10 @@ Add tests outside `src/` and test the installed package. Keep synthetic SDK
 fixtures independent of network access, API credentials, SDK version churn, and
 the developer's environment. Every defect correction needs a regression test.
 Update API documentation, examples, and `CHANGELOG.md` with observable changes.
+Read [testing contracts](docs/testing.md) for the separate mutation, performance,
+pinned SDK, and live-latest gates. Install `.[dev,mutation]` to run the Cosmic Ray
+campaign. Reviewed small golden fixtures are permitted test oracles; changing
+them requires an intentional semantic diff, never automatic acceptance in CI.
 
 The formatter's 88-column profile is the documented line-width exception allowed
 by standards section 5. Python source targets Python 3.11 syntax. Suppressions

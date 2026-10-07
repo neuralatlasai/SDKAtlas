@@ -40,6 +40,82 @@ jobs:
       - run: python -m venv .venv
       - run: ${{ env.PROJECT_PYTHON }} -m pip install -e ".[dev]"
       - run: ${{ env.PROJECT_PYTHON }} scripts/check.py --skip-security
+      # Preserve failed and successful measurement evidence without publishing SDK data.
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: coverage-${{ runner.os }}-${{ matrix.python }}
+          path: |
+            .cache/coverage.json
+            .cache/coverage.xml
+          if-no-files-found: error
+
+  mutation:
+    name: Critical predicate mutation gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - run: python -m venv .venv
+      - run: .venv/bin/python -m pip install -e ".[dev,mutation]"
+      - run: .venv/bin/python scripts/mutation_gate.py --report .cache/mutation-gate.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: mutation-gate
+          path: .cache/mutation-gate.json
+          if-no-files-found: error
+
+  performance:
+    name: Latency, allocation, and scaling budgets
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - run: python -m venv .venv
+      - run: .venv/bin/python -m pip install -e ".[dev]"
+      - run: .venv/bin/python scripts/performance_gate.py --report .cache/performance-gate.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: performance-gate
+          path: .cache/performance-gate.json
+          if-no-files-found: error
+
+  packages:
+    name: Pinned SDK regression (${{ matrix.package }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [openai, agents, numpy]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - run: python -m venv .venv
+      - run: .venv/bin/python -m pip install -e .
+      - run: .venv/bin/python scripts/package_regressions.py --mode pinned --package ${{ matrix.package }} --report .cache/package-report.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: pinned-${{ matrix.package }}
+          path: .cache/package-report.json
+          if-no-files-found: error
 
   security:
     name: Dependency security
@@ -53,5 +129,5 @@ jobs:
         with:
           python-version: '3.14'
       - run: python -m venv .venv
-      - run: .venv/bin/python -m pip install -e ".[dev]"
+      - run: .venv/bin/python -m pip install -e ".[dev,mutation]"
       - run: .venv/bin/python scripts/audit_dependencies.py

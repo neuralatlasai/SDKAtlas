@@ -93,6 +93,9 @@ repository/
 - Every defect fix MUST include a regression test unless the failure cannot be reproduced deterministically.
 - Public behavior MUST be covered by automated tests at the appropriate unit/integration/system boundary.
 - Tests MUST be deterministic and MUST NOT depend on execution order.
+- Small, reviewed golden test oracles MAY be committed under tests; generated
+  operational inventories and validation reports MUST remain untracked. Oracle
+  changes MUST receive an explicit semantic review and MUST NOT self-update in CI.
 - External services, clocks, randomness, filesystems, and environment-dependent behavior MUST be controlled or isolated.
 - Test names MUST identify the behavior or invariant under test.
 - CI MUST fail on test failure; flaky tests MUST be treated as defects, not retried indefinitely.

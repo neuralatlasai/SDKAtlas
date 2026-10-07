@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "small_modules": 16,
+  "large_modules": 64,
+  "methods_per_module": 8,
+  "response_fields": 32,
+  "repeats": 3,
+  "maximum_large_latency_ns": 10000000000,
+  "maximum_large_traced_bytes": 100663296,
+  "minimum_large_methods_per_second": 100,
+  "maximum_latency_scaling_ratio": 7.0,
+  "maximum_memory_scaling_ratio": 6.0,
+  "maximum_export_bytes": 67108864
+}

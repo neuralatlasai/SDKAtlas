@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "framework": "cosmic-ray",
+  "operator": "AddNot",
+  "minimum_kill_percent": 100,
+  "timeout_seconds": 30,
+  "mutations": [
+    {
+      "id": "source-byte-boundary",
+      "file": "scanner.py",
+      "function": "_read_source",
+      "predicate": "before.st_size > limit",
+      "test": "tests/unit/test_scanner.py"
+    },
+    {
+      "id": "ast-node-boundary",
+      "file": "scanner.py",
+      "function": "_ast_size_exceeded",
+      "predicate": "count > limit",
+      "test": "tests/unit/test_scanner.py"
+    },
+    {
+      "id": "variadic-arguments",
+      "file": "scanner.py",
+      "function": "_parameters",
+      "predicate": "args.vararg",
+      "test": "tests/unit/test_scanner.py"
+    },
+    {
+      "id": "local-alias-target",
+      "file": "graph.py",
+      "function": "_Resolver.resolution",
+      "predicate": "candidate in self.classes",
+      "test": "tests/unit/test_graph.py"
+    },
+    {
+      "id": "alias-cycle-detection",
+      "file": "graph.py",
+      "function": "_Resolver.resolution",
+      "predicate": "binding_key in expanded",
+      "test": "tests/unit/test_graph.py"
+    },
+    {
+      "id": "effective-member-budget",
+      "file": "graph.py",
+      "function": "_Resolver.spend_surface",
+      "predicate": "self.surface_expansions == self.budget",
+      "test": "tests/unit/test_graph.py"
+    },
+    {
+      "id": "resource-cycle-detection",
+      "file": "graph.py",
+      "function": "resolve_inventory",
+      "predicate": "transition.target in ancestors",
+      "test": "tests/unit/test_graph.py"
+    },
+    {
+      "id": "class-variable-exclusion",
+      "file": "outputs.py",
+      "function": "resolve_outputs.model_fields",
+      "predicate": "field.kind != 'class_variable'",
+      "test": "tests/unit/test_outputs.py"
+    },
+    {
+      "id": "return-alias-cycle",
+      "file": "outputs.py",
+      "function": "_references",
+      "predicate": "expansion in active",
+      "test": "tests/unit/test_outputs.py"
+    },
+    {
+      "id": "existing-artifact-backup",
+      "file": "export.py",
+      "function": "_publish_existing",
+      "predicate": "target.exists()",
+      "test": "tests/unit/test_export.py"
+    },
+    {
+      "id": "serialization-cache-eviction",
+      "file": "export.py",
+      "function": "_MethodCache.get",
+      "predicate": "len(self.records) == self.capacity",
+      "test": "tests/unit/test_export.py"
+    },
+    {
+      "id": "installation-timeout-validation",
+      "file": "source.py",
+      "function": "package_source",
+      "predicate": "install_timeout <= 0",
+      "test": "tests/unit/test_source.py"
+    }
+  ]
+}

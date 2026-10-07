@@ -24,13 +24,17 @@ classifiers = [
 [project.optional-dependencies]
 dev = [
     "build>=1.2,<2",
+    "coverage[toml]>=7.8,<8",
     "hatchling>=1.27,<2",
+    "hypothesis>=6.130,<7",
     "mypy>=1.15,<2",
     "pip>=25,<27",
     "pip-audit>=2.9,<3",
     "pytest>=8,<10",
+    "pytest-cov>=6,<8",
     "ruff>=0.12,<1",
 ]
+mutation = ["cosmic-ray>=8.7,<9"]
 
 [project.scripts]
 sdk-atlas = "sdk_atlas.cli:main"
@@ -84,6 +88,34 @@ pretty = true
 [tool.pytest.ini_options]
 minversion = "8.0"
 testpaths = ["tests"]
-norecursedirs = ["build", "dist", ".venv", ".git"]
-addopts = ["--import-mode=importlib", "--strict-config", "--strict-markers", "-ra"]
+norecursedirs = ["build", "dist", ".venv", ".git", ".cache", ".hypothesis"]
+addopts = [
+    "--import-mode=importlib",
+    "--strict-config",
+    "--strict-markers",
+    "--cov=sdk_atlas",
+    "--cov-branch",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-report=json:.cache/coverage.json",
+    "--cov-report=xml:.cache/coverage.xml",
+    "-ra",
+]
 filterwarnings = ["error"]
+
+[tool.coverage.run]
+branch = true
+source = ["sdk_atlas"]
+relative_files = true
+
+[tool.coverage.report]
+# This combined statement/branch floor complements the separate line and branch
+# thresholds checked by scripts/check_coverage.py. No production files are omitted.
+fail_under = 94
+precision = 2
+show_missing = true
+
+[tool.sdk_atlas.coverage-gate]
+minimum_lines = 95
+minimum_branches = 90
+minimum_file_lines = 90
+minimum_file_branches = 80

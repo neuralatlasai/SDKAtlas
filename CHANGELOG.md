@@ -32,6 +32,14 @@
   modes.
 - Add typed source layout, deterministic tests, quality gates, and build checks.
 - Enforce repository LF endings across platforms for formatter/build consistency.
+- Enforce independent statement/branch coverage and per-module floors; retain
+  coverage evidence for the supported interpreter/platform CI matrix.
+- Add deterministic Hypothesis properties, malformed-source fuzz replay,
+  controlled runtime differential checks, and reviewed all-artifact goldens.
+- Gate selected production predicate mutations with Cosmic Ray; gate synthetic
+  latency, allocation, throughput, scaling, and complete-output budgets.
+- Automate pinned OpenAI, Agents, and NumPy contracts and live `--latest` scans;
+  test filesystem links, traversal attempts, and publication boundary conflicts.
 
 The initial `0.x` API and export schemas may change between minor releases;
 observable changes must be documented here before release.

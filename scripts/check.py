@@ -123,6 +123,7 @@ def main(argv: list[str] | None = None) -> int:
         [sys.executable, "-m", "ruff", "check", "."],
         [sys.executable, "-m", "mypy"],
         [sys.executable, "-m", "pytest"],
+        [sys.executable, str(_ROOT / "scripts/check_coverage.py")],
     ]
     if not arguments.skip_security:
         commands.append([sys.executable, str(_ROOT / "scripts/audit_dependencies.py")])

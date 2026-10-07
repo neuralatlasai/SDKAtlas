@@ -4,6 +4,14 @@ from collections.abc import Callable, Mapping
 from pathlib import Path
 
 import pytest
+from hypothesis import settings
+
+# Reproducible generated cases are mandatory locally and in CI. Every example
+# owns its filesystem lifetime; the deterministic suite uses no external service.
+settings.register_profile(
+    "ci", max_examples=75, deadline=None, derandomize=True, database=None
+)
+settings.load_profile("ci")
 
 
 @pytest.fixture

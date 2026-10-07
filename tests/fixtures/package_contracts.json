@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "packages": [
+    {
+      "package": "openai",
+      "distribution": "openai",
+      "version": "3.26.0",
+      "minimum_counts": {
+        "modules": 1500,
+        "classes": 3500,
+        "method_definitions": 3000,
+        "functions": 250,
+        "class_fields": 10000
+      },
+      "requires_native_diagnostic": false,
+      "methods": [
+        {
+          "class_id": "openai.resources.responses.responses.Responses",
+          "name": "create",
+          "return_annotation": "Response",
+          "parameters": ["input", "model", "stream", "timeout"],
+          "output_fields": ["id", "model", "output", "usage"],
+          "output_models": ["openai.types.responses.response.Response"],
+          "require_docstring": true,
+          "require_client_path": true
+        },
+        {
+          "class_id": "openai.resources.chat.completions.completions.Completions",
+          "name": "create",
+          "return_annotation": "ChatCompletion",
+          "parameters": ["messages", "model", "stream", "timeout"],
+          "output_fields": ["id", "choices", "model", "usage"],
+          "output_models": ["openai.types.chat.chat_completion.ChatCompletion"],
+          "require_docstring": true,
+          "require_client_path": true
+        }
+      ]
+    },
+    {
+      "package": "agents",
+      "distribution": "openai-agents",
+      "version": "0.23.1",
+      "minimum_counts": {
+        "modules": 250,
+        "classes": 600,
+        "method_definitions": 1400,
+        "functions": 500,
+        "class_fields": 1800
+      },
+      "requires_native_diagnostic": false,
+      "methods": [
+        {
+          "class_id": "agents.run.Runner",
+          "name": "run",
+          "return_annotation": "RunResult",
+          "parameters": ["starting_agent", "input", "context", "session"],
+          "output_fields": ["final_output", "new_items", "raw_responses", "last_agent"],
+          "output_models": ["agents.result.RunResult"],
+          "require_docstring": true,
+          "require_client_path": false
+        },
+        {
+          "class_id": "agents.run.Runner",
+          "name": "run_sync",
+          "return_annotation": "RunResult",
+          "parameters": ["starting_agent", "input", "context", "session"],
+          "output_fields": ["final_output", "new_items", "raw_responses", "last_agent"],
+          "output_models": ["agents.result.RunResult"],
+          "require_docstring": true,
+          "require_client_path": false
+        }
+      ]
+    },
+    {
+      "package": "numpy",
+      "distribution": "numpy",
+      "version": "2.5.3",
+      "minimum_counts": {
+        "modules": 450,
+        "classes": 1000,
+        "method_definitions": 9000,
+        "functions": 4500,
+        "class_fields": 500
+      },
+      "requires_native_diagnostic": true,
+      "methods": [
+        {
+          "class_id": "numpy.ndarray",
+          "name": "reshape",
+          "return_annotation": "Self",
+          "parameters": ["shape", "order", "copy"],
+          "output_fields": [],
+          "output_models": [],
+          "require_docstring": false,
+          "require_client_path": false
+        },
+        {
+          "class_id": "numpy.ndarray",
+          "name": "sum",
+          "return_annotation": "ScalarT",
+          "parameters": ["axis", "dtype", "out", "keepdims", "where"],
+          "output_fields": [],
+          "output_models": [],
+          "require_docstring": false,
+          "require_client_path": false
+        }
+      ]
+    }
+  ]
+}

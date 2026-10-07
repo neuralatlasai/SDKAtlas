@@ -121,3 +121,11 @@ Their methods.csv identifiers match SQLite declarations, every declaration has a
 output-analysis record, and caller parameter lists contain no implicit receiver.
 Analysis coverage measures records processed; it does not imply all response
 shapes are known.
+
+The subsequent testing-rigor review is addressed by repository-controlled
+coverage floors, generated cases and malformed-input fuzzing, a controlled
+runtime oracle, all-artifact goldens, scoped mutation and performance budgets,
+filesystem adversaries, and automated pinned/latest package CI contracts. See
+[testing contracts](testing.md) for exact thresholds, reproduction commands,
+evidence scope, and remaining limits. Passing these checks does not assign a
+review score or establish correctness for arbitrary runtime behavior.

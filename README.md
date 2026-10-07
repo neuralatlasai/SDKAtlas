@@ -319,9 +319,15 @@ python scripts/check.py --artifacts dist
 ```
 
 The check runs formatting, lint, strict typing, deterministic tests, dependency
-auditing, package builds, and a clean installed-wheel smoke scan.
+auditing, package builds, and a clean installed-wheel smoke scan. Coverage gates
+require 95% statements and 90% branches, with separate per-module floors.
 `python scripts/check.py --skip-security` runs offline checks but does not satisfy
 the complete security gate. Generated inventories and environments are ignored.
+CI also runs a scoped Cosmic Ray mutation gate, deterministic Hypothesis and fuzz
+cases, reviewed snapshots for all 14 artifacts, controlled runtime comparisons,
+performance budgets, and pinned real SDK regressions. Live `--latest` compatibility
+runs separately on `main` pushes and weekly. See [testing contracts](docs/testing.md)
+for commands, thresholds, scope, and failure policies.
 
 Version 0.1 is experimental. Output includes `schema_version`; incompatible public
 interface/schema changes require a version change and changelog entry. See
