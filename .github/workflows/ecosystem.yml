@@ -34,7 +34,7 @@ jobs:
       - run: python -m venv .venv
       - run: .venv/bin/python -m pip install -e .
       - run: .venv/bin/python scripts/package_regressions.py --mode latest --package ${{ matrix.package }} --report .cache/latest-report.json
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: latest-${{ matrix.package }}

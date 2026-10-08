@@ -41,7 +41,7 @@ jobs:
       - run: ${{ env.PROJECT_PYTHON }} -m pip install -e ".[dev]"
       - run: ${{ env.PROJECT_PYTHON }} scripts/check.py --skip-security
       # Preserve failed and successful measurement evidence without publishing SDK data.
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: coverage-${{ runner.os }}-${{ matrix.python }}
@@ -64,7 +64,7 @@ jobs:
       - run: python -m venv .venv
       - run: .venv/bin/python -m pip install -e ".[dev,mutation]"
       - run: .venv/bin/python scripts/mutation_gate.py --report .cache/mutation-gate.json
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: mutation-gate
@@ -85,7 +85,7 @@ jobs:
       - run: python -m venv .venv
       - run: .venv/bin/python -m pip install -e ".[dev]"
       - run: .venv/bin/python scripts/performance_gate.py --report .cache/performance-gate.json
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: performance-gate
@@ -110,7 +110,7 @@ jobs:
       - run: python -m venv .venv
       - run: .venv/bin/python -m pip install -e .
       - run: .venv/bin/python scripts/package_regressions.py --mode pinned --package ${{ matrix.package }} --report .cache/package-report.json
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: pinned-${{ matrix.package }}
